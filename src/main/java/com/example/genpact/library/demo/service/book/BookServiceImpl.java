@@ -3,6 +3,8 @@ package com.example.genpact.library.demo.service.book;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +17,15 @@ import com.example.genpact.library.demo.repo.book.BookRepository;
 @Service
 @Transactional
 public class BookServiceImpl implements BookService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
 
 	@Autowired
 	private BookRepository bookRepository;
 
 	@Override
 	public BookModel createBookEntry(BookModel bookModel) {
+		LOGGER.info("Saving new book entry");
 		if (bookModel != null)
 			return this.bookRepository.save(bookModel);
 		
@@ -29,6 +34,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public BookModel updateBookEntry(BookModel bookModel, boolean isUpdate) throws ItemNotFoundException {
+		LOGGER.info("Updating book entry");
 		Long bookId = bookModel.getBookId();
 		Long libraryId = bookModel.getLibraryId();
 		BookModel savedBook = null;
@@ -46,18 +52,21 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void deleteBook(Long libraryId, Long bookId) throws ItemNotFoundException {
+		LOGGER.info("Deleting book entry");
 		BookModel bookModel = this.findBook(libraryId, bookId);
 		this.bookRepository.delete(bookModel);
 	}
 
 	@Override
 	public BookModel findBook(Long libraryId, Long bookId) throws ItemNotFoundException {
+		LOGGER.info("Finding book entry");
 		return this.bookRepository.findBook(libraryId, bookId);
 	}
 
 
 	@Override
 	public List<BookModel> findAll(Long libraryId) {
+		LOGGER.info("Finding all book entries");
 		return this.bookRepository.findAllBooks(libraryId);
 	}
 	
